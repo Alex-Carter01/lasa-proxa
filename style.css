@@ -1,0 +1,19 @@
+h1 {
+	text-align:center;
+	margin-top: 5%;
+}
+
+form {
+	text-align:center;
+}
+
+.error{
+	color:red;
+	text-align: center;
+}
+
+.legal{
+	color: DarkGrey;
+	font-size: 12px;
+	text-align: right;
+}
