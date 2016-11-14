@@ -17,11 +17,17 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'])
 
-WEBSITE_REGEX = re.compile(r"")
+WEBSITE_REGEX = re.compile(r"^(http|https)://www[.]")
+TREATMENT1 = re.compile(r"^(http|https)")
 
 def valid_url(url):
     logging.info("*** regex match: "+str(bool(WEBSITE_REGEX.match(url))))
     return bool(WEBSITE_REGEX.match(url))
+
+def url_treatment(url):
+    if(not bool(TREATMENT1.match(url))):
+        url = "http"+url
+    return url
 
 class Logs(db.Model):
     website = db.StringProperty()
@@ -55,6 +61,7 @@ class MainPage(MyHandler):
         log.website = web
         log.ip = ip
         log.put()
+        web = url_treatment(web)
         if(not valid_url(web)):
             error_v = {"error": "Error: that is not a valid website url"}
             self.write(form.render(error_v))
@@ -62,7 +69,9 @@ class MainPage(MyHandler):
             #self.write("legit")
             response = urllib2.urlopen(web)
             html = response.read()
-            logging.info("html: "+html)
+            #response = urllib2.urlopen(web)
+            #html = response.read()
+            #logging.info("html: "+html)
             self.write(html)
 
 
